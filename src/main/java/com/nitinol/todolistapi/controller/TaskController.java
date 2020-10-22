@@ -1,30 +1,46 @@
 package com.nitinol.todolistapi.controller;
 
 import com.nitinol.todolistapi.persist.*;
-import com.nitinol.todolistapi.repo.TaskRepository;
+import com.nitinol.todolistapi.persist.List;
+import com.nitinol.todolistapi.service.TaskServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.*;
 
+/**
+ *
+ */
 @RestController
 @RequestMapping("lists/{id}/tasks")
 public class TaskController {
 
     private static final int DEFAULT_LIMIT = 10;
 
-    private final TaskRepository taskRepository;
+    private final TaskServiceImpl taskService;
 
+    /**
+     * @param taskService содание объекта сервиса тасков
+     */
     @Autowired
-    public TaskController(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public TaskController(TaskServiceImpl taskService) {
+        this.taskService = taskService;
     }
 
+    /**
+     * @param list
+     * @param page
+     * @param limit
+     * @param orderBy
+     * @param order
+     * @return
+     */
     @GetMapping
-    public Page<Task> tasks(@PathVariable("id") List list,
+    public ResponseEntity<Page<Task>> tasks(@PathVariable("id") List list,
                             @RequestParam Optional<Integer> page,
                             @RequestParam Optional<Integer> limit,
                             @RequestParam Optional<String> orderBy,
@@ -34,45 +50,62 @@ public class TaskController {
             limit = Optional.of(DEFAULT_LIMIT);
         }
 
-        return taskRepository.findByList(list,
-                                        PageRequest.of(page.orElse(0),
-                                        limit.orElse(DEFAULT_LIMIT),
-                                        Sort.Direction.fromString(order.orElse("ASC")),
-                                        orderBy.orElse("id")));
+        Pageable pageable = PageRequest.of(page.orElse(0),
+                            limit.orElse(DEFAULT_LIMIT),
+                            Sort.Direction.fromString(order.orElse("ASC")),
+                            orderBy.orElse("id"));
+        Page<Task> taskPage = taskService.tasks(list, pageable);
+
+        return taskPage != null && !taskPage.isEmpty()
+                ? new ResponseEntity<>(taskPage, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("{taskId}")
-    public Task getOneCase(@PathVariable("taskId") Task task){
-        return task;
+    public ResponseEntity<Task> getOneTask(@PathVariable(name = "taskId") UUID taskId){
+        Task task = taskService.getOneTask(taskId);
+
+        return task != null
+                ? new ResponseEntity<>(task, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
-    public Task create(@PathVariable("id") List list,
-                       @RequestBody Task task){
-        task.setCreationDate(LocalDateTime.now());
-        task.setChangeDate(LocalDateTime.now());
-        task.setComplete(false);
-        task.setList(list);
-        return taskRepository.save(task);
+    public ResponseEntity<?> create(@PathVariable("id") List list,
+                                    @RequestBody Task task){
+        taskService.create(list, task);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("{taskId}")
-    public Task update(@PathVariable("taskId") Task taskFromDb,
-                       @RequestBody Task task){
-        BeanUtils.copyProperties(task, taskFromDb, "id", "creationDate", "list");
-        taskFromDb.setChangeDate(LocalDateTime.now());
-        return taskRepository.save(taskFromDb);
+    public ResponseEntity<?> update(@PathVariable(name = "id") UUID id,
+                                    @PathVariable(name = "taskId") UUID taskId,
+                                    @RequestBody Task task){
+        final boolean updated = taskService.update(task, id, taskId);
+
+        return updated
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    }
+
+    @DeleteMapping("{taskId}")
+    public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id,
+                       @PathVariable(name = "taskId") UUID taskId){
+        final boolean deleted = taskService.delete(id, taskId);
+
+        return deleted
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
     @PostMapping("/mark-done/{taskId}")
-    public Task markDone(@PathVariable("taskId") Task task){
-        task.setComplete(true);
-        return taskRepository.save(task);
-    }
+    public ResponseEntity<?> markDone(@PathVariable(name = "id") UUID id,
+                                      @PathVariable(name = "taskId") UUID taskId){
+        final boolean markDone = taskService.markDone(id, taskId);
 
-    @DeleteMapping("{task_id}")
-    public void delete(@PathVariable("task_id") Task task){
-        taskRepository.delete(task);
+        return markDone
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
-
 }
