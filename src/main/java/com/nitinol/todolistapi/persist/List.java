@@ -15,7 +15,7 @@ import java.util.UUID;
 @Data
 public class List {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false)

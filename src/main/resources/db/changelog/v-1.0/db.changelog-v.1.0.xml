@@ -5,7 +5,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <include file="01-changeset-users-table.xml" relativeToChangelogFile="true"/>
-    <include file="10-changeset-shopping-items-table.xml" relativeToChangelogFile="true"/>
+    <include file="01-changeset-list-table.xml" relativeToChangelogFile="true"/>
+    <include file="10-changeset-task-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
