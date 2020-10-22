@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Реализация интерфейса сервиса тасков
+ */
 @Service
 public class TaskServiceImpl implements TaskService {
     @Autowired
@@ -28,12 +31,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task create(List list, Task task) {
+    public void create(List list, Task task) {
         task.setCreationDate(LocalDateTime.now());
         task.setChangeDate(LocalDateTime.now());
         task.setComplete(false);
         task.setList(list);
-        return taskRepository.save(task);
+        taskRepository.save(task);
     }
 
     @Override

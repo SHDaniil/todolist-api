@@ -1,19 +1,17 @@
 package com.nitinol.todolistapi.controller;
 
-import com.nitinol.todolistapi.persist.*;
 import com.nitinol.todolistapi.persist.List;
+import com.nitinol.todolistapi.persist.*;
 import com.nitinol.todolistapi.service.TaskServiceImpl;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- *
+ *  Контроллер тасков
  */
 @RestController
 @RequestMapping("lists/{id}/tasks")
@@ -24,6 +22,8 @@ public class TaskController {
     private final TaskServiceImpl taskService;
 
     /**
+     * Конструктор контроллера тасков
+     *
      * @param taskService содание объекта сервиса тасков
      */
     @Autowired
@@ -32,19 +32,21 @@ public class TaskController {
     }
 
     /**
-     * @param list
-     * @param page
-     * @param limit
-     * @param orderBy
-     * @param order
-     * @return
+     * Вывод всех тасков по списку
+     *
+     * @param list Список по которому осушествляется поиск
+     * @param page номер страницы
+     * @param limit количество элементов на странице
+     * @param orderBy по какому элементу сортировать
+     * @param order метод сортировки ASC or DESC
+     * @return возвращет страницу с тасками
      */
     @GetMapping
     public ResponseEntity<Page<Task>> tasks(@PathVariable("id") List list,
-                            @RequestParam Optional<Integer> page,
-                            @RequestParam Optional<Integer> limit,
-                            @RequestParam Optional<String> orderBy,
-                            @RequestParam Optional<String> order){
+                                            @RequestParam Optional<Integer> page,
+                                            @RequestParam Optional<Integer> limit,
+                                            @RequestParam Optional<String> orderBy,
+                                            @RequestParam Optional<String> order){
 
         if(limit.isPresent() && limit.get() > 100){
             limit = Optional.of(DEFAULT_LIMIT);
@@ -61,6 +63,12 @@ public class TaskController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Поиск таска по ID
+     *
+     * @param taskId ID таска
+     * @return найденный таск или код ошибки
+     */
     @GetMapping("{taskId}")
     public ResponseEntity<Task> getOneTask(@PathVariable(name = "taskId") UUID taskId){
         Task task = taskService.getOneTask(taskId);
@@ -70,6 +78,13 @@ public class TaskController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Добавление нового списка
+     *
+     * @param list список
+     * @param task таск который нужно добавить
+     * @return HTTP код
+     */
     @PostMapping
     public ResponseEntity<?> create(@PathVariable("id") List list,
                                     @RequestBody Task task){
@@ -78,6 +93,14 @@ public class TaskController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    /**
+     * Изменение таска
+     *
+     * @param id ID списка
+     * @param taskId ID таска
+     * @param task Измененный таск
+     * @return HTTP код
+     */
     @PutMapping("{taskId}")
     public ResponseEntity<?> update(@PathVariable(name = "id") UUID id,
                                     @PathVariable(name = "taskId") UUID taskId,
@@ -89,6 +112,13 @@ public class TaskController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    /**
+     * Удаление таска
+     *
+     * @param id ID списка
+     * @param taskId ID таска
+     * @return HTTP код
+     */
     @DeleteMapping("{taskId}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id,
                        @PathVariable(name = "taskId") UUID taskId){
@@ -99,6 +129,13 @@ public class TaskController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    /**
+     * Отметить таск как законченный
+     *
+     * @param id ID списка
+     * @param taskId ID таска
+     * @return HTTP код
+     */
     @PostMapping("/mark-done/{taskId}")
     public ResponseEntity<?> markDone(@PathVariable(name = "id") UUID id,
                                       @PathVariable(name = "taskId") UUID taskId){

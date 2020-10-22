@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+/**
+ * Репозиторий таблицы списков
+ */
 @Repository
 public interface ListRepository extends JpaRepository<List, UUID> {
 

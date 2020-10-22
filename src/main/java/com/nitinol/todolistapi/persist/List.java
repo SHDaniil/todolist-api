@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Схема таблицы списков
+ */
 @Entity
 @Table(name = "lists")
 @Data

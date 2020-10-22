@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+/**
+ * Контроллер листов
+ */
 @RestController
 @RequestMapping("lists")
 public class ListController {
@@ -17,16 +20,30 @@ public class ListController {
 
     private final ListServiceImpl listService;
 
+    /**
+     * Конструктор контроллера листов
+     *
+     * @param listService создание объекта сервиса листов
+     */
     @Autowired
     public ListController(ListServiceImpl listService) {
         this.listService = listService;
     }
 
+    /**
+     * Поиск всех списков
+     *
+     * @param page номер страницы
+     * @param limit количество элементов на странице
+     * @param orderBy по какому элементу сортировать
+     * @param order метод сортировки ASC or DESC
+     * @return возвращет страницу со списками
+     */
     @GetMapping
     public ResponseEntity<Page<List>> lists(@RequestParam Optional<Integer> page,
-                            @RequestParam Optional<Integer> limit,
-                            @RequestParam Optional<String> orderBy,
-                            @RequestParam Optional<String> order){
+                                            @RequestParam Optional<Integer> limit,
+                                            @RequestParam Optional<String> orderBy,
+                                            @RequestParam Optional<String> order){
 
         if(limit.isPresent() && limit.get() > 100){
             limit = Optional.of(DEFAULT_LIMIT);
@@ -43,6 +60,12 @@ public class ListController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Поиск списка по ID
+     *
+     * @param id ID списка
+     * @return найденный список или код ошибки
+     */
     @GetMapping("{id}")
     public ResponseEntity<List> getOneList(@PathVariable(name = "id") UUID id){
         List list = listService.getOneList(id);
@@ -52,6 +75,12 @@ public class ListController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Добавление нового списка
+     *
+     * @param list список который нужно добавить
+     * @return HTTP код
+     */
     @PostMapping
     public ResponseEntity<?> create(@RequestBody List list){
         listService.create(list);
@@ -59,6 +88,13 @@ public class ListController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    /**
+     * Изменение списка
+     *
+     * @param id ID списка
+     * @param list Измененный список
+     * @return HTTP код
+     */
     @PutMapping("{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") UUID id,
                                     @RequestBody List list
@@ -70,6 +106,12 @@ public class ListController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    /**
+     * Удаление списка
+     *
+     * @param id ID списка
+     * @return HTTP код
+     */
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id){
         final boolean deleted = listService.delete(id);

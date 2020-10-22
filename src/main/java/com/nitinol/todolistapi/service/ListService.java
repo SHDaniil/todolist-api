@@ -5,16 +5,49 @@ import org.springframework.data.domain.*;
 
 import java.util.UUID;
 
+/**
+ * Интерфей сервиса списков
+ */
 public interface ListService {
 
+    /**
+     * Поиск всех списков
+     *
+     * @param pageable страница
+     * @return возвращет страницу со списками
+     */
     Page<List> lists(Pageable pageable);
 
+    /**
+     * Поиск списка по ID
+     *
+     * @param id ID списка
+     * @return найденный список
+     */
     List getOneList(UUID id);
 
-    List create(List list);
+    /**
+     * Добавление нового списка
+     *
+     * @param list список который нужно добавить
+     */
+    void create(List list);
 
+    /**
+     * Изменение списка
+     *
+     * @param list Измененный список
+     * @param id ID списка
+     * @return true/false
+     */
     boolean update(List list, UUID id);
 
+    /**
+     * Удаление списка
+     *
+     * @param id ID списка
+     * @return true/false
+     */
     boolean delete(UUID id);
 
 }

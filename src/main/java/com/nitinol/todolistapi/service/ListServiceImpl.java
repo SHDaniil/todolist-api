@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Реализация интерфейса сервиса списков
+ */
 @Service
 public class ListServiceImpl implements ListService {
     @Autowired
@@ -26,10 +29,10 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public List create(List list) {
+    public void create(List list) {
         list.setCreationDate(LocalDateTime.now());
         list.setChangeDate(LocalDateTime.now());
-        return listRepository.save(list);
+        listRepository.save(list);
     }
 
     @Override
