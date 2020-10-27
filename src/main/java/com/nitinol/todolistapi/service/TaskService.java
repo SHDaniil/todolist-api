@@ -20,14 +20,6 @@ public interface TaskService {
     Page<Task> tasks(List list, Pageable pageable);
 
     /**
-     * Поиск таска по ID
-     *
-     * @param id ID таска
-     * @return найденный таск или код ошибки
-     */
-    Task getOneTask(UUID id);
-
-    /**
      * Добавление нового списка
      *
      * @param list список

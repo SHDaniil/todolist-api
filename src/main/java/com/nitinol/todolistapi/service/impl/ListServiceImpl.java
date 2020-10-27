@@ -1,7 +1,8 @@
-package com.nitinol.todolistapi.service;
+package com.nitinol.todolistapi.service.impl;
 
 import com.nitinol.todolistapi.persist.List;
 import com.nitinol.todolistapi.repo.ListRepository;
+import com.nitinol.todolistapi.service.ListService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -21,11 +22,6 @@ public class ListServiceImpl implements ListService {
     @Override
     public Page<List> lists(Pageable pageable) {
         return listRepository.findAll(pageable);
-    }
-
-    @Override
-    public List getOneList(UUID id) {
-        return listRepository.getOne(id);
     }
 
     @Override

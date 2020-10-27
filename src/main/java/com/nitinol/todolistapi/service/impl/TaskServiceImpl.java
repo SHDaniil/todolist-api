@@ -1,7 +1,8 @@
-package com.nitinol.todolistapi.service;
+package com.nitinol.todolistapi.service.impl;
 
 import com.nitinol.todolistapi.persist.*;
 import com.nitinol.todolistapi.repo.*;
+import com.nitinol.todolistapi.service.TaskService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -23,11 +24,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Page<Task> tasks(List list, Pageable pageable) {
         return taskRepository.findByList(list, pageable);
-    }
-
-    @Override
-    public Task getOneTask(UUID id) {
-        return taskRepository.getOne(id);
     }
 
     @Override
@@ -77,7 +73,7 @@ public class TaskServiceImpl implements TaskService {
             return false;
         }
 
-        Task task = taskRepository.getOne(id);
+        Task task = taskRepository.getOne(taskId);
         task.setComplete(true);
         taskRepository.save(task);
         return true;

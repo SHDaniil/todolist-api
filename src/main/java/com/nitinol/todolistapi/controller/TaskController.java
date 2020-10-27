@@ -2,7 +2,7 @@ package com.nitinol.todolistapi.controller;
 
 import com.nitinol.todolistapi.persist.List;
 import com.nitinol.todolistapi.persist.*;
-import com.nitinol.todolistapi.service.TaskServiceImpl;
+import com.nitinol.todolistapi.service.impl.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
@@ -66,12 +66,10 @@ public class TaskController {
     /**
      * Поиск таска по ID
      *
-     * @param taskId ID таска
      * @return найденный таск или код ошибки
      */
     @GetMapping("{taskId}")
-    public ResponseEntity<Task> getOneTask(@PathVariable(name = "taskId") UUID taskId){
-        Task task = taskService.getOneTask(taskId);
+    public ResponseEntity<Task> getOneTask(@PathVariable("taskId") Task task){
 
         return task != null
                 ? new ResponseEntity<>(task, HttpStatus.OK)

@@ -1,7 +1,7 @@
 package com.nitinol.todolistapi.controller;
 
 import com.nitinol.todolistapi.persist.List;
-import com.nitinol.todolistapi.service.ListServiceImpl;
+import com.nitinol.todolistapi.service.impl.ListServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
@@ -63,12 +63,10 @@ public class ListController {
     /**
      * Поиск списка по ID
      *
-     * @param id ID списка
      * @return найденный список или код ошибки
      */
     @GetMapping("{id}")
-    public ResponseEntity<List> getOneList(@PathVariable(name = "id") UUID id){
-        List list = listService.getOneList(id);
+    public ResponseEntity<List> getOneList(@PathVariable("id") List list){
 
         return list != null
                 ? new ResponseEntity<>(list, HttpStatus.OK)

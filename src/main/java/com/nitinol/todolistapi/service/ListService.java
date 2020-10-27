@@ -19,14 +19,6 @@ public interface ListService {
     Page<List> lists(Pageable pageable);
 
     /**
-     * Поиск списка по ID
-     *
-     * @param id ID списка
-     * @return найденный список
-     */
-    List getOneList(UUID id);
-
-    /**
      * Добавление нового списка
      *
      * @param list список который нужно добавить
