@@ -9,7 +9,13 @@
     <property name="uuid_type" value="uuid" dbms="postgresql"/>
     <property name="uuid_function" value="uuid_generate_v4()" dbms="postgresql"/>
 
-    <changeSet  author="daniil_sh"  id="changelog-1.0">
+    <changeSet  author="daniil_sh"  id="create_extension">
+    <sql>
+        CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+    </sql>
+    </changeSet>
+
+    <changeSet  author="daniil_sh"  id="create_tables">
         <createTable  tableName="lists">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
                 <constraints primaryKey="true" nullable="false"/>
@@ -48,7 +54,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="list_id" type="${uuid_type}">
-                <constraints nullable="false"/>
+                <constraints nullable="false" foreignKeyName="fk_lists_id" references="lists(id)"/>
             </column>
         </createTable>
     </changeSet>

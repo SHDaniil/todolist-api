@@ -2,6 +2,7 @@ package com.nitinol.todolistapi.controller;
 
 import com.nitinol.todolistapi.persist.List;
 import com.nitinol.todolistapi.service.impl.ListServiceImpl;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
@@ -12,6 +13,7 @@ import java.util.*;
 /**
  * Контроллер листов
  */
+@Api("Контроллер листов")
 @RestController
 @RequestMapping("lists")
 public class ListController {
@@ -39,6 +41,7 @@ public class ListController {
      * @param order метод сортировки ASC or DESC
      * @return возвращет страницу со списками
      */
+    @ApiOperation("Вывод всех списков")
     @GetMapping
     public ResponseEntity<Page<List>> lists(@RequestParam Optional<Integer> page,
                                             @RequestParam Optional<Integer> limit,
@@ -63,6 +66,7 @@ public class ListController {
     /**
      * Поиск списка по ID
      *
+     * @param list Список по ID
      * @return найденный список или код ошибки
      */
     @GetMapping("{id}")

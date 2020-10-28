@@ -64,8 +64,9 @@ public class TaskController {
     }
 
     /**
-     * Поиск таска по ID
+     * Поиск списка по ID
      *
+     * @param task Таск по ID
      * @return найденный таск или код ошибки
      */
     @GetMapping("{taskId}")
