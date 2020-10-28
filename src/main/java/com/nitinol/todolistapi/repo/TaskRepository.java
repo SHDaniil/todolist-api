@@ -21,4 +21,10 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
      * @return возвращет страницу с тасками
      */
     Page<Task> findByList(List list, Pageable pageable);
+
+    /**
+     * @param title заголовок
+     * @return Найденный таск по заголовку
+     */
+    Task readByTitle(String title);
 }

@@ -42,4 +42,10 @@ public interface ListService {
      */
     boolean delete(UUID id);
 
+    /**
+     * @param title заголовок
+     * @return Найденный список по заголовку
+     */
+    List readByTitle(String title);
+
 }

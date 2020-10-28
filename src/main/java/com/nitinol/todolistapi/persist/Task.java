@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ public class Task {
     private UUID id;
 
     @ApiModelProperty(value = "Заголовок таска")
+    @Max(value = 250, message = "Слишком большое значение")
     @Column(nullable = false)
     private String title;
 
@@ -39,6 +41,7 @@ public class Task {
     private boolean complete;
 
     @ApiModelProperty(value = "Описание таска")
+    @Max(value = 250, message = "Слишком большое значение")
     @Column
     private String description;
 

@@ -78,4 +78,9 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(task);
         return true;
     }
+
+    @Override
+    public Task readByTitle(String title) {
+        return taskRepository.readByTitle(title);
+    }
 }

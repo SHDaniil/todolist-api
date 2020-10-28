@@ -12,4 +12,9 @@ import java.util.UUID;
 @Repository
 public interface ListRepository extends JpaRepository<List, UUID> {
 
+    /**
+     * @param title заголовок
+     * @return Найденный список по заголовку
+     */
+    List readByTitle(String title);
 }

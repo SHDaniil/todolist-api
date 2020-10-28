@@ -1,8 +1,9 @@
 package com.nitinol.todolistapi.controller;
 
+import com.nitinol.todolistapi.exceptions.*;
 import com.nitinol.todolistapi.persist.List;
 import com.nitinol.todolistapi.service.impl.ListServiceImpl;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
@@ -11,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 /**
- * Контроллер листов
+ * Контроллер списков
  */
-@Api("Контроллер листов")
 @RestController
 @RequestMapping("lists")
 public class ListController {
 
     private static final int DEFAULT_LIMIT = 10;
+    private static final int MAX_LENGTH_TITLE = 250;
 
     private final ListServiceImpl listService;
 
@@ -41,7 +42,7 @@ public class ListController {
      * @param order метод сортировки ASC or DESC
      * @return возвращет страницу со списками
      */
-    @ApiOperation("Вывод всех списков")
+    @ApiOperation(value = "Вывод всех списков")
     @GetMapping
     public ResponseEntity<Page<List>> lists(@RequestParam Optional<Integer> page,
                                             @RequestParam Optional<Integer> limit,
@@ -69,6 +70,7 @@ public class ListController {
      * @param list Список по ID
      * @return найденный список или код ошибки
      */
+    @ApiOperation(value = "Поиск списка по ID")
     @GetMapping("{id}")
     public ResponseEntity<List> getOneList(@PathVariable("id") List list){
 
@@ -83,8 +85,17 @@ public class ListController {
      * @param list список который нужно добавить
      * @return HTTP код
      */
+    @ApiOperation(value = "Добавление нового списка")
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody List list){
+    public ResponseEntity<?> create(@RequestBody List list) throws BigLengthException, ConflictException {
+        if(list.getTitle().length() > MAX_LENGTH_TITLE) {
+            throw new BigLengthException();
+        }
+
+        if(listService.readByTitle(list.getTitle()) != null) {
+            throw new ConflictException();
+        }
+
         listService.create(list);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -97,10 +108,15 @@ public class ListController {
      * @param list Измененный список
      * @return HTTP код
      */
+    @ApiOperation(value = "Изменение списка")
     @PutMapping("{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") UUID id,
                                     @RequestBody List list
-    ){
+    ) throws BigLengthException {
+        if(list.getTitle().length() > MAX_LENGTH_TITLE) {
+            throw new BigLengthException();
+        }
+
         final boolean updated = listService.update(list, id);
 
         return updated
@@ -114,6 +130,7 @@ public class ListController {
      * @param id ID списка
      * @return HTTP код
      */
+    @ApiOperation(value = "Удаление списка")
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") UUID id){
         final boolean deleted = listService.delete(id);

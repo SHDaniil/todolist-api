@@ -10,9 +10,9 @@
     <property name="uuid_function" value="uuid_generate_v4()" dbms="postgresql"/>
 
     <changeSet  author="daniil_sh"  id="create_extension">
-    <sql>
-        CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-    </sql>
+        <sql>
+            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        </sql>
     </changeSet>
 
     <changeSet  author="daniil_sh"  id="create_tables">

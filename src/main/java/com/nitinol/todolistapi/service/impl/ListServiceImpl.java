@@ -53,4 +53,9 @@ public class ListServiceImpl implements ListService {
         listRepository.deleteById(id);
         return true;
     }
+
+    @Override
+    public List readByTitle(String title) {
+        return listRepository.readByTitle(title);
+    }
 }

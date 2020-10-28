@@ -55,4 +55,10 @@ public interface TaskService {
      */
     boolean markDone(UUID id, UUID taskId);
 
+    /**
+     * @param title заголовок
+     * @return Найденный таск по заголовку
+     */
+    Task readByTitle(String title);
+
 }
