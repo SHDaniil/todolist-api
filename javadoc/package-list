@@ -1,0 +1,7 @@
+com.nitinol.todolistapi
+com.nitinol.todolistapi.controller
+com.nitinol.todolistapi.exceptions
+com.nitinol.todolistapi.persist
+com.nitinol.todolistapi.repo
+com.nitinol.todolistapi.service
+com.nitinol.todolistapi.service.impl
