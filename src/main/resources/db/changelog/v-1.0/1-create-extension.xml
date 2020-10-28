@@ -6,15 +6,9 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <preConditions>
-        <dbms type="postgresql"/>
-    </preConditions>
-
-    <changeSet id="0" author="daniil_sh">
-        <tagDatabase tag="db_init"/>
+    <changeSet  author="daniil_sh"  id="create_extension">
+        <sql>
+            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        </sql>
     </changeSet>
-
-    <include file="v-1.0/1-create-extension.xml" relativeToChangelogFile="true"/>
-    <include file="v-1.0/2-create-tables.xml" relativeToChangelogFile="true"/>
-
 </databaseChangeLog>
